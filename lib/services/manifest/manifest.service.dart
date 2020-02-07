@@ -23,6 +23,7 @@ class ManifestService {
   factory ManifestService() {
     return _singleton;
   }
+  ManifestService._internal();
 
   Future<void> reset() async {
     _cached.clear();
@@ -32,7 +33,6 @@ class ManifestService {
     }
   }
 
-  ManifestService._internal();
 
   Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
@@ -138,13 +138,14 @@ class ManifestService {
     }
     var storage = StorageService.language();
     var path = await storage.getPath(StorageKeys.manifestFile, dbPath: true);
-
-    sqflite.Database database =
-        await sqflite.openDatabase("$path", readOnly: true).catchError((e) {
+    try{
+      sqflite.Database database =
+        await sqflite.openDatabase("$path", readOnly: true);
+        _db = database;
+    }catch(e){
       print(e);
       return null;
-    });
-    _db = database;
+    }
 
     return _db;
   }

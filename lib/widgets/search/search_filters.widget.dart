@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:flutter_range_slider/flutter_range_slider.dart' as range;
@@ -6,11 +7,13 @@ import 'package:bungie_api/models/destiny_item_tier_type_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:bungie_api/models/destiny_item_category_definition.dart';
+import 'package:little_light/widgets/icon_fonts/destiny_icons_icons.dart';
 
 enum FilterType {
   powerLevel,
   damageType,
   bucketType,
+  wishlistTag,
   tierType,
   itemType,
   itemSubType,
@@ -18,15 +21,13 @@ enum FilterType {
   classType,
 }
 
-class FilterItem {
-  List<int> options;
-  List<int> values;
+class FilterItem<T> {
+  List<T> options;
+  List<T> values;
   bool open;
 
   FilterItem(this.options, this.values, {this.open = false});
 }
-
-
 
 class SearchFiltersWidget extends StatefulWidget {
   final Map<FilterType, FilterItem> filterData;
@@ -76,6 +77,12 @@ class SearchFiltersWidgetState extends State<SearchFiltersWidget> {
     if (widget.filterData.containsKey(FilterType.damageType)) {
       controls.add(buildTypeSelector(
           context, TranslatedTextWidget("Damage Type"), FilterType.damageType));
+      controls.add(Container(height: 10));
+    }
+
+    if (widget.filterData.containsKey(FilterType.wishlistTag)) {
+      controls.add(buildTypeSelector(context,
+          TranslatedTextWidget("Wishlist Tags"), FilterType.wishlistTag));
       controls.add(Container(height: 10));
     }
 
@@ -214,7 +221,7 @@ class SearchFiltersWidgetState extends State<SearchFiltersWidget> {
             ]));
   }
 
-  Widget optionButton(BuildContext context, int id, FilterType type) {
+  Widget optionButton<T>(BuildContext context, dynamic id, FilterType type) {
     var filter = widget.filterData[type];
     var onTap = () {
       if (multiselect == type) {
@@ -254,6 +261,64 @@ class SearchFiltersWidgetState extends State<SearchFiltersWidget> {
                     filter.values.contains(id),
                     onTap: onTap,
                     onLongPress: onLongPress)));
+
+      case FilterType.wishlistTag:
+        Color color;
+        Widget icon;
+        String text;
+        switch (id as WishlistTag) {
+          case WishlistTag.PVE:
+            color = Colors.blue.shade800;
+            icon = Icon(DestinyIcons.vanguard, size: 20);
+            text = "PvE";
+            break;
+
+          case WishlistTag.PVP:
+            color = Colors.red.shade800;
+            icon = Icon(DestinyIcons.crucible, size: 20);
+            text = "PvP";
+            break;
+
+          case WishlistTag.Trash:
+            color = Colors.lightGreen.shade500;
+            icon = Container(
+                height: 20,
+                width: 30,
+                child: Text(
+                  "🤢",
+                  style: TextStyle(fontSize: 20, height: 1.2),
+                  textAlign: TextAlign.center,
+                ));
+            text = "Trash";
+            break;
+
+          case WishlistTag.Bungie:
+            color = Colors.black;
+            icon = Icon(DestinyIcons.bungie, size: 20);
+            text = "Curated";
+        }
+        return FractionallySizedBox(
+            widthFactor: 1 / 2,
+            child: button(
+                context,
+                Container(
+                    height: 50,
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          icon,
+                          Container(height: 4),
+                          TranslatedTextWidget(text,
+                              uppercase: true,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              )),
+                        ])),
+                filter.values.contains(id),
+                color: color,
+                onTap: onTap,
+                onLongPress: onLongPress));
 
       case FilterType.ammoType:
         return FractionallySizedBox(
@@ -361,13 +426,16 @@ class SearchFiltersWidgetState extends State<SearchFiltersWidget> {
 
   Widget button(BuildContext context, Widget content, bool selected,
       {Color color, Function onTap, Function onLongPress}) {
+    Color bgColor = color ?? Colors.blueGrey.shade800;
     return Container(
         margin: EdgeInsets.all(2),
+        decoration: BoxDecoration(
+            color: selected ? Color.lerp(bgColor, Colors.lightBlue.shade300, .2) : bgColor,
+            borderRadius: BorderRadius.circular(4),
+            border: Border.all(color: Colors.lightBlue.shade300, width: 3, style:selected ? BorderStyle.solid: BorderStyle.none)),
         child: Material(
             borderRadius: BorderRadius.circular(4),
-            color: selected
-                ? Colors.lightBlue.shade700
-                : color ?? Colors.blueGrey.shade800,
+            color: Colors.transparent,
             child: InkWell(
                 enableFeedback: false,
                 onTap: onTap,

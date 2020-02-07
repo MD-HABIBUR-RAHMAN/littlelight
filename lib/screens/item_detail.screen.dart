@@ -1,4 +1,4 @@
-import 'package:bungie_api/enums/destiny_item_type_enum.dart';
+import 'package:bungie_api/enums/destiny_item_type.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_instance_component.dart';
@@ -29,11 +29,13 @@ import 'package:little_light/widgets/item_details/main_info/item_main_info.widge
 import 'package:little_light/widgets/item_details/management_block.widget.dart';
 import 'package:little_light/widgets/item_details/quest_info.widget.dart';
 import 'package:little_light/widgets/item_details/rewards_info.widget.dart';
+import 'package:little_light/widgets/item_details/wishlist_notes.widget.dart';
 import 'package:little_light/widgets/item_notes/item_details_notes.widget.dart';
 import 'package:little_light/widgets/item_sockets/details_armor_tier.widget.dart';
 import 'package:little_light/widgets/item_sockets/details_item_armor_exotic_perk.widget.dart';
 import 'package:little_light/widgets/item_sockets/details_item_mods.widget.dart';
 import 'package:little_light/widgets/item_sockets/details_item_perks.widget.dart';
+import 'package:little_light/widgets/item_sockets/item_details_plug_info.widget.dart';
 import 'package:little_light/widgets/item_sockets/item_details_socket_details.widget.dart';
 import 'package:little_light/widgets/item_sockets/item_socket.controller.dart';
 import 'package:little_light/widgets/item_stats/details_item_stats.widget.dart';
@@ -162,11 +164,13 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
               delegate: SliverChildListDelegate([
             buildSaleDetails(context),
             ItemMainInfoWidget(item, definition, instanceInfo),
+            buildWishlistNotes(context),
             buildManagementBlock(context),
             buildActionButtons(context),
             buildDuplicates(context),
             buildExoticPerk(context),
             buildExoticPerkDetails(context),
+            buildModInfo(context),
             buildStats(context),
             buildPerks(context),
             buildPerkDetails(context),
@@ -214,6 +218,7 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
             buildDuplicates(context),
             buildExoticPerk(context),
             buildExoticPerkDetails(context),
+            buildModInfo(context),
             buildStats(context),
             buildPerks(context),
             buildPerkDetails(context),
@@ -255,6 +260,17 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
         ));
   }
 
+  Widget buildWishlistNotes(BuildContext context) {
+    if (item == null) return Container();
+    var screenPadding = MediaQuery.of(context).padding;
+    return Container(
+        padding: EdgeInsets.only(
+            left: screenPadding.left, right: screenPadding.right),
+        child: WishlistNotesWidget(
+          item,
+        ));
+  }
+
   Widget buildManagementBlock(BuildContext context) {
     if (widget.hideItemManagement) return Container();
     var screenPadding = MediaQuery.of(context).padding;
@@ -273,55 +289,61 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
     if (widget.hideItemManagement || widget.item == null) return Container();
     List<Widget> buttons = [];
     if (loadoutBucketHashes.contains(definition?.inventory?.bucketTypeHash)) {
-      buttons.add(Expanded(child:RaisedButton(
-                child: TranslatedTextWidget("Add to Loadout"),
-                onPressed: () async {
-                  var loadouts = await LoadoutsService().getLoadouts();
-                  var equipped = false;
-                  showModalBottomSheet(
-                      context: context,
-                      builder: (context) => LoadoutSelectSheet(
-                          header: AsEquippedSwitchWidget(
-                            onChanged: (value) {
-                              equipped = value;
-                            },
-                          ),
-                          loadouts: loadouts,
-                          onSelect: (loadout) async {
-                            loadout.addItem(widget.item.itemHash,
-                                widget.item.itemInstanceId, equipped);
-                            await LoadoutsService().saveLoadout(loadout);
-                          }));
-                })));
+      buttons.add(Expanded(
+          child: RaisedButton(
+              child: TranslatedTextWidget("Add to Loadout"),
+              onPressed: () async {
+                var loadouts = await LoadoutsService().getLoadouts();
+                var equipped = false;
+                showModalBottomSheet(
+                    context: context,
+                    builder: (context) => LoadoutSelectSheet(
+                        header: AsEquippedSwitchWidget(
+                          onChanged: (value) {
+                            equipped = value;
+                          },
+                        ),
+                        loadouts: loadouts,
+                        onSelect: (loadout) async {
+                          loadout.addItem(widget.item.itemHash,
+                              widget.item.itemInstanceId, equipped);
+                          await LoadoutsService().saveLoadout(loadout);
+                        }));
+              })));
     }
-    if (widget?.definition?.collectibleHash != null || widget?.definition?.equippable == true) {
-      buttons.add(Expanded(child:RaisedButton(
-                child: TranslatedTextWidget("View in Collections"),
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ItemDetailScreen(
-                        definition: widget.definition,
-                        uniqueId: null,
-                      ),
+    if (widget?.definition?.collectibleHash != null ||
+        widget?.definition?.equippable == true) {
+      buttons.add(Expanded(
+          child: RaisedButton(
+              child: TranslatedTextWidget("View in Collections"),
+              onPressed: () async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ItemDetailScreen(
+                      definition: widget.definition,
+                      uniqueId: null,
                     ),
-                  );
-                })));
+                  ),
+                );
+              })));
     }
-    if(buttons.length == 0){
+    if (buttons.length == 0) {
       return Container();
     }
-    buttons = buttons.expand((b){
-      return [b, Container(width:8)];
-    }).take(buttons.length*2 -1).toList();
+    buttons = buttons
+        .expand((b) {
+          return [b, Container(width: 8)];
+        })
+        .take(buttons.length * 2 - 1)
+        .toList();
     var screenPadding = MediaQuery.of(context).padding;
     return Container(
         padding: EdgeInsets.only(
             left: screenPadding.left, right: screenPadding.right),
         child: Container(
             padding: EdgeInsets.all(8),
-            child: Row(children:buttons.toList())));
+            child: Row(children: buttons.toList())));
   }
 
   Widget buildDuplicates(context) {
@@ -375,6 +397,18 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
             padding: EdgeInsets.all(8),
             child: RewardsInfoWidget(item, definition, instanceInfo,
                 characterId: characterId, key: Key("item_rewards_widget"))));
+  }
+
+  Widget buildModInfo(BuildContext context) {
+    var screenPadding = MediaQuery.of(context).padding;
+    if (definition.itemType != DestinyItemType.Mod) return Container();
+    return Container(
+        padding: EdgeInsets.only(
+            left: screenPadding.left, right: screenPadding.right),
+        child: ItemDetailsPlugInfoWidget(
+          item: item,
+          definition: definition,
+        ));
   }
 
   Widget buildStats(BuildContext context) {
@@ -509,7 +543,7 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
               definition: definition,
               item: item,
               category: modsCategory,
-              key: Key('perks_widget'),
+              key: Key('mods_widget'),
             )));
   }
 

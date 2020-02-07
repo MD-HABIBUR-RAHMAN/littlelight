@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:bungie_api/enums/destiny_item_type_enum.dart';
+import 'package:bungie_api/enums/destiny_item_type.dart';
 import 'package:bungie_api/models/destiny_inventory_bucket_definition.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
@@ -210,6 +210,9 @@ class InventoryItemWrapperWidgetState<T extends InventoryItemWrapperWidget>
   void onTap(context) {
     if (SelectionService().multiselectActivated) {
       onLongPress(context);
+      return;
+    }
+    if(definition == null){
       return;
     }
     Navigator.push(

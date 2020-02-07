@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:bungie_api/enums/destiny_energy_type_enum.dart';
-import 'package:bungie_api/enums/tier_type_enum.dart';
+import 'package:bungie_api/enums/destiny_energy_type.dart';
+import 'package:bungie_api/enums/tier_type.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_socket_category_definition.dart';
@@ -57,7 +57,7 @@ class ItemDetailsSocketDetailsWidgetState
                   padding: EdgeInsets.all(8),
                   color: Colors.black,
                   child: buildContent(context)),
-              buildResourceCost(context)
+              buildResourceCost(context),
             ]));
   }
 
@@ -96,7 +96,8 @@ class ItemDetailsSocketDetailsWidgetState
       buildEnergyCost(context),
       buildSandBoxPerks(context),
       buildStats(context),
-      buildObjectives(context)
+      buildObjectives(context),
+      buildWishlistInfo(context),
     ];
     return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -121,7 +122,8 @@ class ItemDetailsSocketDetailsWidgetState
 
   buildObjectives(BuildContext context) {
     var itemObjectives = widget.profile.getPlugObjectives(item?.itemInstanceId);
-    if(!(itemObjectives?.containsKey("${definition.hash}") ?? false)) return Container();
+    if (!(itemObjectives?.containsKey("${definition.hash}") ?? false))
+      return Container();
     var objectives = itemObjectives["${definition.hash}"];
     return Column(
         children: <Widget>[
@@ -132,7 +134,6 @@ class ItemDetailsSocketDetailsWidgetState
     ]
             .followedBy(objectives.map((o) => ObjectiveWidget(
                   objective: o,
-
                 )))
             .toList());
   }
@@ -332,20 +333,29 @@ class ItemDetailsSocketDetailsWidgetState
         width: min(64, screenWidth / 8),
         key: Key("plug_${socketIndex}_$plugItemHash"),
         padding: EdgeInsets.all(0),
-        child: AspectRatio(
-            aspectRatio: 1,
-            child: FlatButton(
-              shape: intrinsic && !isExotic
-                  ? RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(4), side: borderSide)
-                  : CircleBorder(side: borderSide),
-              padding: EdgeInsets.all(intrinsic ? 0 : 8),
-              color: bgColor,
-              child: ManifestImageWidget<DestinyInventoryItemDefinition>(
-                  plugItemHash),
-              onPressed: () {
-                controller.selectSocket(socketIndex, plugItemHash);
-              },
-            )));
+        child: Stack(children: [
+          AspectRatio(
+              aspectRatio: 1,
+              child: FlatButton(
+                shape: intrinsic && !isExotic
+                    ? RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4),
+                        side: borderSide)
+                    : CircleBorder(side: borderSide),
+                padding: EdgeInsets.all(intrinsic ? 0 : 8),
+                color: bgColor,
+                child: ManifestImageWidget<DestinyInventoryItemDefinition>(
+                    plugItemHash),
+                onPressed: () {
+                  controller.selectSocket(socketIndex, plugItemHash);
+                },
+              )),
+              Positioned(
+              top: 0,
+              right: 0,
+              left:0,
+              child: Center(
+                  child: buildSpecialtiesIcons(plugItemHash)))
+        ]));
   }
 }

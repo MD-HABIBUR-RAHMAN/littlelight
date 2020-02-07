@@ -1,13 +1,17 @@
-import 'package:bungie_api/enums/damage_type_enum.dart';
+import 'package:bungie_api/enums/damage_type.dart';
 import 'package:flutter/material.dart';
+import 'package:little_light/models/wish_list.dart';
+import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateless_item.widget.dart';
 import 'package:little_light/widgets/common/item_icon/item_icon.widget.dart';
 import 'package:little_light/widgets/common/item_name_bar/item_name_bar.widget.dart';
 import 'package:little_light/widgets/common/primary_stat.widget.dart';
+import 'package:little_light/widgets/icon_fonts/destiny_icons_icons.dart';
 
 mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
   final String uniqueId = "";
+  final Widget trailing = null;
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -123,11 +127,12 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
 
   Widget nameBar(BuildContext context) {
     return ItemNameBarWidget(item, definition, instanceInfo,
+        trailing: namebarTrailingWidget(context),
         padding: EdgeInsets.only(
             left: iconSize + padding * 2,
             top: padding,
             bottom: padding,
-            right: padding));
+            right: 2));
   }
 
   background(BuildContext context) {
@@ -136,7 +141,120 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
         left: 0,
         bottom: 0,
         right: 0,
-        child: Container(color: Colors.blueGrey.shade900));
+        child: Container(
+            color: Colors.blueGrey.shade900,
+            padding: EdgeInsets.only(
+              top: titleFontSize + padding * 2,
+              left:iconSize
+            ),
+            child: wishlistBackground(context)));
+  }
+
+  Widget wishlistBackground(BuildContext context) {
+    var tags = WishlistsService().getWishlistBuildTags(item);
+    if (tags == null) return Container();
+    if (tags.contains(WishlistTag.PVE) &&
+        tags.contains(WishlistTag.PVP)) { 
+      return Image.asset(
+        "assets/imgs/allaround-bg.png",
+        fit: BoxFit.fitHeight,
+        alignment: Alignment.bottomCenter,
+      );
+    }
+    if (tags.contains(WishlistTag.PVE)) {
+      return Image.asset(
+        "assets/imgs/pve-bg.png",
+        fit: BoxFit.fitHeight,
+        alignment: Alignment.bottomLeft,
+      );
+    }
+    if (tags.contains(WishlistTag.PVP)) {
+      return Image.asset(
+        "assets/imgs/pvp-bg.png",
+        fit: BoxFit.fitHeight, 
+        alignment: Alignment.bottomRight,
+      );
+    }
+
+    if (tags.contains(WishlistTag.Bungie)) {
+      return Image.asset(
+        "assets/imgs/curated-bg.png",
+        fit: BoxFit.fitHeight,
+        alignment: Alignment.bottomCenter,
+      );
+    }
+    return Container();
+  }
+
+  List<Widget> trailingWishlistIcons(BuildContext context) {
+    var tags = WishlistsService().getWishlistBuildTags(item);
+    if (tags == null) return [];
+    List<Widget> items = [];
+    if (tags.contains(WishlistTag.PVE)) {
+      items.add(buildTagIcon(context, Colors.blue.shade800,
+          Icon(DestinyIcons.vanguard, size: tagIconSize)));
+    }
+    if (tags.contains(WishlistTag.PVP)) {
+      items.add(buildTagIcon(context, Colors.red.shade800,
+          Icon(DestinyIcons.crucible, size: tagIconSize)));
+    }
+    if (tags.contains(WishlistTag.Trash)) {
+      items.add(buildTagIcon(
+          context,
+          Colors.lightGreen.shade500,
+          Text(
+            "🤢",
+            style: TextStyle(fontSize: tagIconSize, height: 1.3),
+            textAlign: TextAlign.center,
+          )));
+    }
+    if (tags.contains(WishlistTag.Bungie)) {
+      items.add(buildTagIcon(
+          context,
+          Colors.black,
+          Icon(DestinyIcons.bungie, size: tagIconSize)));
+    }
+    if(tags.length == 0){
+      items.add(buildTagIcon(
+          context,
+          Colors.amber.shade600,
+          Icon(Icons.star, size: tagIconSize)));
+    }
+    return items;
+  }
+
+  Widget buildTagIcon(BuildContext context, Color bgColor, Widget icon) {
+    return Container(
+        margin: EdgeInsets.symmetric(vertical: 2),
+        child: AspectRatio(
+            aspectRatio: 1,
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  color: bgColor, borderRadius: BorderRadius.circular(4)),
+              child: icon,
+            )));
+  }
+
+  Widget namebarTrailingWidget(BuildContext context) {
+    List<Widget> items = [];
+    items.addAll(trailingWishlistIcons(context));
+    if (trailing != null) {
+      items.add(trailing);
+    }
+    if ((items?.length ?? 0) == 0) return Container();
+    items = items
+        .expand((i) => [
+              i,
+              Container(
+                width: padding / 2,
+              )
+            ])
+        .toList();
+    items.removeLast();
+    return Row(
+      children: items,
+    );
   }
 
   double get iconSize {
@@ -157,5 +275,9 @@ mixin InventoryItemMixin implements BaseDestinyStatelessItemWidget {
 
   double get titleFontSize {
     return 14;
+  }
+
+  double get tagIconSize {
+    return 22;
   }
 }

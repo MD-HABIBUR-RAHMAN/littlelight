@@ -23,6 +23,7 @@ class MediumBaseInventoryItemWidget extends BaseInventoryItemWidget {
 
   Widget nameBar(BuildContext context){
     return ItemNameBarWidget(item, definition, instanceInfo,
+            trailing: namebarTrailingWidget(context),
             padding: EdgeInsets.all(
                 padding),fontSize: titleFontSize, fontWeight: FontWeight.w500,);
   }
@@ -54,6 +55,10 @@ class MediumBaseInventoryItemWidget extends BaseInventoryItemWidget {
   }
 
   double get titleFontSize {
+    return 10;
+  }
+  @override
+  double get tagIconSize{
     return 10;
   }
 

@@ -1,9 +1,10 @@
-import 'package:bungie_api/enums/damage_type_enum.dart';
-import 'package:bungie_api/enums/destiny_class_enum.dart';
-import 'package:bungie_api/enums/tier_type_enum.dart';
+import 'package:bungie_api/enums/damage_type.dart';
+import 'package:bungie_api/enums/destiny_class.dart';
+import 'package:bungie_api/enums/tier_type.dart';
 import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 
 import 'package:flutter/material.dart';
+import 'package:little_light/models/wish_list.dart';
 import 'package:little_light/services/bungie_api/enums/inventory_bucket_hash.enum.dart';
 import 'package:little_light/services/user_settings/item_sort_parameter.dart';
 import 'package:little_light/services/user_settings/user_settings.service.dart';
@@ -12,13 +13,13 @@ import 'package:little_light/widgets/inventory_tabs/inventory_notification.widge
 import 'package:little_light/widgets/inventory_tabs/selected_items.widget.dart';
 import 'package:little_light/widgets/item_list/search_list.widget.dart';
 import 'package:little_light/widgets/search/search_filters.widget.dart';
-import 'package:bungie_api/enums/destiny_item_type_enum.dart';
-import 'package:bungie_api/enums/destiny_item_sub_type_enum.dart';
-import 'package:bungie_api/enums/destiny_ammunition_type_enum.dart';
+import 'package:bungie_api/enums/destiny_item_type.dart';
+import 'package:bungie_api/enums/destiny_item_sub_type.dart';
+import 'package:bungie_api/enums/destiny_ammunition_type.dart';
 
 class SearchTabData {
   String searchText = "";
-  List<int> itemTypes;
+  List<DestinyItemType> itemTypes;
   String ownerId;
   List<int> excludeItemTypes;
   Map<FilterType, FilterItem> filterData;
@@ -68,6 +69,12 @@ class SearchTabData {
             DestinyItemSubType.Sword,
             DestinyItemSubType.Machinegun,
           ], []),
+          FilterType.wishlistTag: FilterItem([
+            WishlistTag.PVE,
+            WishlistTag.PVP,
+            WishlistTag.Bungie,
+            WishlistTag.Trash,
+          ], [], open:true),
           FilterType.ammoType: FilterItem([
             DestinyAmmunitionType.Primary,
             DestinyAmmunitionType.Special,
@@ -107,7 +114,7 @@ class SearchTabData {
         },
       );
 
-  factory SearchTabData.armor([int classType]) => SearchTabData(
+  factory SearchTabData.armor([DestinyClass classType]) => SearchTabData(
         itemTypes: [DestinyItemType.Armor],
         filterData: {
           FilterType.powerLevel: FilterItem(
