@@ -7,7 +7,7 @@ description: A new Flutter project.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.6.81+106081
+version: 1.6.82+106082
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -43,7 +43,7 @@ dependencies:
   launch_review: 2.0.0
   esys_flutter_share: 1.0.2
   drag_list: ^1.0.3
-  json_annotation: 
+  json_annotation:
 
   speech_bubble: ^0.0.5
   
