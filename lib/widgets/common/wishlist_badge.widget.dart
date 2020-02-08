@@ -21,8 +21,12 @@ class WishlistBadgeWidget extends StatelessWidget {
       badges.add(buildBadge(context, Colors.black, Icon(DestinyIcons.bungie, size:size*.9,)));
     }
     if(badges.length > 0){
-      print(tags);
       return Row(children: badges,);
+    }
+    if(tags.length == 0){
+      return buildBadge(context, Colors.amber.shade500, Container(
+        padding:EdgeInsets.all(size*.1),
+        child:Icon(Icons.star, size:size*.8,)),);
     }
     if(tags.contains(WishlistTag.Trash)){
       return buildBadge(context, Colors.lightGreen.shade500, Container(
