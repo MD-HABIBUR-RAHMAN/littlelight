@@ -21,13 +21,6 @@ platform :android do
       metadata_path:'../translations/metadata/android',
       aab:'../build/app/outputs/bundle/release/app.aab',
       skip_upload_screenshots:true,
-      skip_upload_metadata:true,
-      skip_upload_changelogs:true,
-      skip_upload_images:true,
-    )
-    supply(
-      metadata_path:'../translations/metadata/android',
-      skip_upload_screenshots:true,
       skip_upload_images:true,
     )
   end

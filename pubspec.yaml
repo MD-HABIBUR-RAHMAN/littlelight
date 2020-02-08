@@ -91,8 +91,8 @@ flutter:
     - family:  DestinyIcons
       fonts:
       - asset: fonts/DestinyIcons.ttf
-    - family: NeueHaasDisplay
-      fonts:
+    # - family: NeueHaasDisplay
+      # fonts:
       # - asset: fonts/NeueHaasDisplay-Thin.ttf
       #   weight: 300
       # - asset: fonts/NeueHaasDisplay-ThinItalic.ttf
