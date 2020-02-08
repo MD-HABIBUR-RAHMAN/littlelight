@@ -29,7 +29,6 @@ platform :android do
       metadata_path:'../translations/metadata/android',
       skip_upload_screenshots:true,
       skip_upload_images:true,
-      skip_upload_changelogs:true,
     )
   end
 

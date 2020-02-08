@@ -42,6 +42,10 @@ class DimWishlistParser {
     if (line.contains("//notes:")) {
       return line.replaceAll("//notes:", "");
     }
+    if (line.contains("//") && line.contains("(") && line.contains(")")) {
+      var index = line.indexOf("//");
+      return line.substring(index);
+    }
     if (line.contains("#notes:")) {
       var index = line.indexOf("#notes:");
       return line.substring(index + 6);

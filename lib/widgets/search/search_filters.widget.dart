@@ -284,11 +284,9 @@ class SearchFiltersWidgetState extends State<SearchFiltersWidget> {
             icon = Container(
                 height: 20,
                 width: 30,
-                child: Text(
-                  "🤢",
-                  style: TextStyle(fontSize: 20, height: 1.2),
-                  textAlign: TextAlign.center,
-                ));
+                child: Image.asset(
+                "assets/imgs/trash-roll-icon.png",
+              ));
             text = "Trash";
             break;
 
