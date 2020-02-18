@@ -7,7 +7,7 @@ description: A new Flutter project.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.6.83+106083
+version: 1.6.85+106085
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -25,7 +25,8 @@ dependencies:
   path_provider: ^1.1.2
   uni_links: ^0.2.0
   font_awesome_flutter: ^8.4.0
-  bungie_api: ^12.4.1+3
+  bungie_api:
+    path: ../bungie-api-dart
   flutter_linkify: 3.1.0
 
   shimmer: 1.0.0
@@ -42,7 +43,7 @@ dependencies:
   flutter_advanced_networkimage: 0.6.0-alpha.1
   launch_review: 2.0.0
   esys_flutter_share: 1.0.2
-  drag_list: ^1.0.3
+  drag_list: 1.0.7
   json_annotation:
 
   speech_bubble: ^0.0.5
