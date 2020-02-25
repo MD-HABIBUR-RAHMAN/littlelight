@@ -85,9 +85,10 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
       widget.profile.getItemSockets(item?.itemInstanceId);
 
   initState() {
+    print(widget?.definition?.hash);
+    super.initState();
     socketController =
         ItemSocketController(definition: widget.definition, item: widget.item);
-    super.initState();
     this.loadDefinitions();
   }
 
@@ -289,7 +290,7 @@ class ItemDetailScreenState extends BaseDestinyItemState<ItemDetailScreen> {
   Widget buildActionButtons(BuildContext context) {
     if (widget.hideItemManagement || widget.item == null) return Container();
     List<Widget> buttons = [];
-    if (loadoutBucketHashes.contains(definition?.inventory?.bucketTypeHash)) {
+    if (InventoryBucket.loadoutBucketHashes.contains(definition?.inventory?.bucketTypeHash)) {
       buttons.add(Expanded(
           child: RaisedButton(
               child: TranslatedTextWidget("Add to Loadout"),

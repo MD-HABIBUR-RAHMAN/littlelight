@@ -3,14 +3,11 @@ import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_socket_category_definition.dart';
 import 'package:bungie_api/models/destiny_item_socket_state.dart';
 import 'package:flutter/material.dart';
-import 'package:little_light/models/wish_list.dart';
-import 'package:little_light/services/littlelight/wishlists.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
-import 'package:little_light/widgets/common/wishlist_badge.widget.dart';
 import 'package:little_light/widgets/item_sockets/item_socket.controller.dart';
 
 class BaseItemSocketsWidget extends BaseDestinyStatefulItemWidget {
@@ -68,8 +65,8 @@ class BaseItemSocketsWidgetState<T extends BaseItemSocketsWidget>
 
   @override
   dispose() {
-    super.dispose();
     controller.removeListener(update);
+    super.dispose();
   }
 
   update() {
@@ -149,32 +146,5 @@ class BaseItemSocketsWidgetState<T extends BaseItemSocketsWidget>
   }
 
 
-  List<Widget> wishlistIcons(BuildContext context, int plugItemHash) {
-    var tags = WishlistsService().getPerkTags(definition.hash, plugItemHash);
-    if (tags == null) return [];
-    List<Widget> items = [];
-    if (tags.contains(WishlistTag.PVE)) {
-      items.add(buildWishlistIcon(context, WishlistTag.PVE));
-    }else{
-      items.add(Container());
-    }
-    if (tags.contains(WishlistTag.PVP)) {
-      items.add(buildWishlistIcon(context, WishlistTag.PVP));
-    }
-    return items;
-  }
-
-  buildWishlistIcon(BuildContext context, WishlistTag tag){
-    return WishlistBadgeWidget(tags:[tag].toSet(), size:16);
-  }
-
-  Widget buildWishlistTagIcons(int plugItemHash) {
-    var icons = wishlistIcons(context, plugItemHash);
-    if ((icons?.length ?? 0) > 0) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: icons);
-    }
-    return Container();
-  }
+  
 }

@@ -3,7 +3,6 @@ import 'package:little_light/services/littlelight/wishlists.service.dart';
 
 class DimWishlistParser {
   Set<int> _itemHashes = Set();
-  Set<String> _buildIds = Set();
 
   parse(String text) async {
     var lines = text.split('\n');
@@ -67,8 +66,14 @@ class DimWishlistParser {
         tagsStr.toLowerCase().contains("trash")) {
       tags.add(WishlistTag.Trash);
     }
+    if (tagsStr.toLowerCase().contains("godpve")) {
+      tags.add(WishlistTag.GodPVE);
+    }
     if (tagsStr.toLowerCase().contains("pve")) {
       tags.add(WishlistTag.PVE);
+    }
+    if (tagsStr.toLowerCase().contains("godpvp")) {
+      tags.add(WishlistTag.GodPVP);
     }
     if (tagsStr.toLowerCase().contains("pvp")) {
       tags.add(WishlistTag.PVP);
@@ -105,14 +110,12 @@ class DimWishlistParser {
     if (itemHashStr == null) return;
     var perks = perksStr
             ?.split(",")
-            ?.map((p) => int.tryParse(p))
+            ?.map((p) => [int.tryParse(p)])
             ?.where((p) => p != null)
             ?.toList() ??
         [];
-    perks?.sort();
     var hash = int.parse(itemHashStr);
-    WishlistsService().addToWishList(hash, perks, specialties, notes);
+    WishlistsService().addToWishList(null, hash, perks, specialties, notes);
     _itemHashes.add(hash);
-    _buildIds.add("$hash #${perks.join('_')}");
   }
 }

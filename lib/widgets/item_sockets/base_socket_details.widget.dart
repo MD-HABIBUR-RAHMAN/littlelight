@@ -5,31 +5,23 @@ import 'package:bungie_api/models/destiny_inventory_item_definition.dart';
 import 'package:bungie_api/models/destiny_item_component.dart';
 import 'package:bungie_api/models/destiny_item_socket_category_definition.dart';
 import 'package:bungie_api/models/destiny_material_requirement_set_definition.dart';
-
 import 'package:bungie_api/models/destiny_objective_definition.dart';
-
 import 'package:bungie_api/models/destiny_sandbox_perk_definition.dart';
 import 'package:bungie_api/models/destiny_stat_definition.dart';
 import 'package:bungie_api/models/destiny_stat_group_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/models/wish_list.dart';
-
-
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/littlelight/wishlists.service.dart';
-
 import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/utils/destiny_data.dart';
 import 'package:little_light/widgets/common/base/base_destiny_stateful_item.widget.dart';
 import 'package:little_light/widgets/common/definition_provider.widget.dart';
 import 'package:little_light/widgets/common/manifest_image.widget.dart';
 import 'package:little_light/widgets/common/manifest_text.widget.dart';
-
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/common/wishlist_badge.widget.dart';
-import 'package:little_light/widgets/icon_fonts/destiny_icons_icons.dart';
-
 import 'package:little_light/widgets/item_stats/item_details_socket_item_stats.widget.dart';
 
 import 'item_socket.controller.dart';
@@ -69,8 +61,10 @@ class BaseSocketDetailsWidgetState<T extends BaseSocketDetailsWidget>
 
    @override
   void initState() {
-    if(controller != null) controller.addListener(socketChanged);
     super.initState();
+
+    if(controller != null) controller.addListener(socketChanged);
+    
     loadDefinitions();
   }
 
@@ -415,46 +409,42 @@ class BaseSocketDetailsWidgetState<T extends BaseSocketDetailsWidget>
     );
   }
 
-  List<Widget> wishlistIcons(BuildContext context, int plugItemHash) {
-    var tags = WishlistsService().getPerkTags(itemDefinition?.hash, plugItemHash);
-    if (tags == null) return [];
-    List<Widget> items = [];
-    if (tags.contains(WishlistTag.PVE)) {
-      items.add(Container(
-        decoration: BoxDecoration(
-            color: Colors.blue.shade800,
-            borderRadius: BorderRadius.circular(4)),
-        padding: EdgeInsets.all(2),
-        child: Icon(DestinyIcons.vanguard, size: 13),
-      ));
-    }else{
-      items.add(Container());
-    }
-    if (tags.contains(WishlistTag.PVP)) {
-      items.add(Container(
-        decoration: BoxDecoration(
-            color: Colors.red.shade800, borderRadius: BorderRadius.circular(4)),
-        padding: EdgeInsets.all(2),
-        child: Icon(DestinyIcons.crucible, size: 13),
-      ));
-    }
-    return items;
-  }
-
-  Widget buildSpecialtiesIcons(int plugItemHash) {
-    var icons = wishlistIcons(context, plugItemHash);
-    if ((icons?.length ?? 0) > 0) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: icons);
-    }
-    return Container();
-  }
-
   Widget buildWishlistInfo(BuildContext context, [double iconSize = 16, double fontSize=13]) {
     var tags = WishlistsService().getPerkTags(itemDefinition?.hash, definition.hash);
     if (tags == null) return Container();
-    if (tags.contains(WishlistTag.PVE) && tags.contains(WishlistTag.PVP)) {
+    List<Widget> rows = [];
+    if (tags.contains(WishlistTag.GodPVE) && tags.contains(WishlistTag.GodPVP)){
+      return Container(
+          padding: EdgeInsets.symmetric(vertical: iconSize/2),
+          child: Row(children: [
+            WishlistBadgeWidget(tags:[WishlistTag.GodPVE, WishlistTag.GodPVP].toSet(), size:iconSize),
+            Container(width: 4,),
+            Expanded(child:
+            TranslatedTextWidget(
+                "This perk is considered the best for both PvE and PvP on this item.", style:TextStyle(fontSize: fontSize, fontWeight: FontWeight.w300)))
+          ]));
+    }
+    if (tags.contains(WishlistTag.GodPVE)) {
+      rows.add(Container(
+          padding: EdgeInsets.symmetric(vertical: iconSize/2),
+          child: Row(children: [
+            WishlistBadgeWidget(tags:[WishlistTag.GodPVE].toSet(), size:iconSize),
+            Container(width: 4,),
+            Expanded(child:TranslatedTextWidget(
+                "This perk is considered the best for PvE on this item.", style:TextStyle(fontSize: fontSize, fontWeight: FontWeight.w300)))
+          ])));
+    }
+    if (tags.contains(WishlistTag.GodPVP)) {
+      rows.add(Container(
+          padding: EdgeInsets.symmetric(vertical: iconSize/2),
+          child: Row(children: [
+            WishlistBadgeWidget(tags:[WishlistTag.GodPVP].toSet(), size:iconSize),
+            Container(width: 4,),
+            Expanded(child:TranslatedTextWidget(
+                "This perk is considered the best for PvP on this item.", style:TextStyle(fontSize: fontSize, fontWeight: FontWeight.w300)))
+          ])));
+    }
+    if (tags.contains(WishlistTag.PVE) && tags.contains(WishlistTag.PVP) && rows.length == 0){
       return Container(
           padding: EdgeInsets.symmetric(vertical: iconSize/2),
           child: Row(children: [
@@ -465,25 +455,30 @@ class BaseSocketDetailsWidgetState<T extends BaseSocketDetailsWidget>
                 "This perk is considered good for both PvE and PvP on this item.", style:TextStyle(fontSize: fontSize, fontWeight: FontWeight.w300)))
           ]));
     }
-    if (tags.contains(WishlistTag.PVE)) {
-      return Container(
+    if (tags.contains(WishlistTag.PVE) && !tags.contains(WishlistTag.GodPVE)) {
+      rows.add(Container(
           padding: EdgeInsets.symmetric(vertical: iconSize/2),
           child: Row(children: [
             WishlistBadgeWidget(tags:[WishlistTag.PVE].toSet(), size:iconSize),
             Container(width: 4,),
             Expanded(child:TranslatedTextWidget(
                 "This perk is considered good for PvE on this item.", style:TextStyle(fontSize: fontSize, fontWeight: FontWeight.w300)))
-          ]));
+          ])));
     }
-    if (tags.contains(WishlistTag.PVP)) {
-      return Container(
+    if (tags.contains(WishlistTag.PVP) && !tags.contains(WishlistTag.GodPVP)) {
+      rows.add(Container(
           padding: EdgeInsets.symmetric(vertical: iconSize/2),
           child: Row(children: [
             WishlistBadgeWidget(tags:[WishlistTag.PVP].toSet(), size:iconSize),
             Container(width: 4,),
             Expanded(child:TranslatedTextWidget(
                 "This perk is considered good for PvP on this item.", style:TextStyle(fontSize: fontSize, fontWeight: FontWeight.w300)))
-          ]));
+          ])));
+    }
+    if(rows.length > 0){
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: rows,);
     }
     return Container();
   }
