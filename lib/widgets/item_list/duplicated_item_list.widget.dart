@@ -12,6 +12,7 @@ import 'package:little_light/services/manifest/manifest.service.dart';
 import 'package:little_light/services/notification/notification.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/services/selection/selection.service.dart';
+import 'package:little_light/services/user_settings/user_settings.service.dart';
 import 'package:little_light/utils/item_with_owner.dart';
 import 'package:little_light/utils/media_query_helper.dart';
 import 'package:little_light/widgets/common/header.wiget.dart';
@@ -180,10 +181,10 @@ class DuplicatedItemListWidgetState extends State<DuplicatedItemListWidget>
         return StaggeredTile.extent(6, 96);
       case DuplicatedListItemType.itemInstance:
       if(MediaQueryHelper(context).laptopOrBigger){
-          return StaggeredTile.extent(1, 110);  
+          return StaggeredTile.extent(1, 118);  
         }
         if(MediaQueryHelper(context).tabletOrBigger){
-          return StaggeredTile.extent(2, 110);  
+          return StaggeredTile.extent(2, 118);  
         }
         return StaggeredTile.extent(3, 110);
 
@@ -288,6 +289,7 @@ class _DefinitionItemWrapperState extends State<_DefinitionItemWrapper> {
       color: Colors.transparent,
       child: InkWell(
         onTap: () => onTap(context),
+        onLongPress: ()=>onTap(context),
       ),
     );
   }
@@ -298,6 +300,7 @@ class _DefinitionItemWrapperState extends State<_DefinitionItemWrapper> {
         SelectionService().removeItem(item);
       }
     }else{
+      SelectionService().activateMultiSelect();
       for(var item in widget.items){
         if(!SelectionService().isSelected(item)){
           SelectionService().addItem(item);
@@ -378,6 +381,11 @@ class _ItemInstanceWrapperState extends State<_ItemInstanceWrapper> {
       onLongPress(context);
       return;
     }
+    if(UserSettingsService().tapToSelect){
+      SelectionService().setItem(ItemWithOwner(widget.item, widget.characterId));
+      return;
+    }
+    SelectionService().clear();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -394,7 +402,7 @@ class _ItemInstanceWrapperState extends State<_ItemInstanceWrapper> {
 
   void onLongPress(context) {
     if (widget.definition.nonTransferrable) return;
-
+    SelectionService().activateMultiSelect();
     SelectionService().addItem(ItemWithOwner(widget.item, widget.characterId));
     setState(() {});
   }
