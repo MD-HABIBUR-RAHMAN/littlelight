@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:little_light/utils/item_filters/power_level_constraints_filter.dart';
+import 'package:little_light/utils/item_filters/energy_level_constraints_filter.dart';
 import 'package:little_light/widgets/common/small_rect_range_slider_indicator_shape.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/flutter/smaller_switch.dart';
 import 'package:little_light/widgets/search/search.controller.dart';
 import 'package:little_light/widgets/search/search_filters/base_search_filter.widget.dart';
 
-class PowerLevelConstraintsWidget
-    extends BaseSearchFilterWidget<PowerLevelConstraintsFilter> {
-  PowerLevelConstraintsWidget(SearchController controller) : super(controller);
+class EnergyLevelConstraintsWidget
+    extends BaseSearchFilterWidget<EnergyLevelConstraintsFilter> {
+  EnergyLevelConstraintsWidget(SearchController controller) : super(controller);
 
   @override
-  _PowerLevelConstraintsWidgetState createState() =>
-      _PowerLevelConstraintsWidgetState();
+  EnergyLevelConstraintsWidgetState createState() =>
+      EnergyLevelConstraintsWidgetState();
 }
 
-class _PowerLevelConstraintsWidgetState extends BaseSearchFilterWidgetState<
-    PowerLevelConstraintsWidget,
-    PowerLevelConstraintsFilter,
-    PowerLevelConstraints> {
+class EnergyLevelConstraintsWidgetState extends BaseSearchFilterWidgetState<
+    EnergyLevelConstraintsWidget,
+    EnergyLevelConstraintsFilter,
+    EnergyLevelConstraints> {
   
   @override
   Widget buildButtons(BuildContext context) {
@@ -27,7 +27,7 @@ class _PowerLevelConstraintsWidgetState extends BaseSearchFilterWidgetState<
     var min = filter?.value?.min ?? -999;
     var max = filter?.value?.max ?? 999;
     var powerlessAvaialable =
-        filter?.availableValues?.includePowerlessItems ?? false;
+        filter?.availableValues?.includeEnergylessItems ?? false;
     return Column(children: [
       !powerlessAvaialable
           ? Container()
@@ -36,11 +36,11 @@ class _PowerLevelConstraintsWidgetState extends BaseSearchFilterWidgetState<
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  TranslatedTextWidget("Include powerless items"),
+                  TranslatedTextWidget("Include energyless items"),
                   SmallerSwitch(
-                    value: filter.value.includePowerlessItems,
+                    value: filter.value.includeEnergylessItems,
                     onChanged: (value) {
-                      filter.value.includePowerlessItems = value;
+                      filter.value.includeEnergylessItems = value;
                       controller.prioritize(this.filter);
                       controller.update();
                     },
@@ -80,7 +80,7 @@ class _PowerLevelConstraintsWidgetState extends BaseSearchFilterWidgetState<
   @override
   Widget buildFilterLabel(BuildContext context) {
     return TranslatedTextWidget(
-      "Power Level",
+      "Energy Capacity",
       uppercase: true,
     );
   }

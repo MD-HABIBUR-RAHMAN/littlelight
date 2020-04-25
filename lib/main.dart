@@ -23,7 +23,7 @@ void main() async {
 
   runZoned<Future<void>>(() async {
     runApp(new LittleLight(key: Key("little_light_$restartCounter")));
-  }, onError: (error, stackTrace) {
+  }, onError:(error, stackTrace) {
     handler.handleException(error, stackTrace);
   });
 }

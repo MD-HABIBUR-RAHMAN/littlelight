@@ -264,5 +264,10 @@
     "Sort": "Sort",
     "Active Sorters": "Active Sorters",
     "Available Sorters": "Available Sorters",
-    "Select Stat": "Select Stat"
+    "Select Stat": "Select Stat",
+    "Current average": "Current average",
+    "Achievable average": "Achievable average",
+    "Under average slots": "Under average slots",
+    "Go for powerful reward?": "Go for powerful reward?",
+    "Go for pinnacle reward?": "Go for pinnacle reward?"
 }

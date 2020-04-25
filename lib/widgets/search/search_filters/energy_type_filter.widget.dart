@@ -1,27 +1,27 @@
-import 'package:bungie_api/enums/damage_type.dart';
-import 'package:bungie_api/models/destiny_damage_type_definition.dart';
+import 'package:bungie_api/enums/destiny_energy_type.dart';
+import 'package:bungie_api/models/destiny_energy_type_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/services/bungie_api/bungie_api.service.dart';
 import 'package:little_light/services/manifest/manifest.service.dart';
-import 'package:little_light/utils/item_filters/damage_type_filter.dart';
+import 'package:little_light/utils/item_filters/energy_type_filter.dart';
 import 'package:little_light/widgets/common/queued_network_image.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/search/search.controller.dart';
 import 'package:little_light/widgets/search/search_filters/base_search_filter.widget.dart';
 
-class DamageTypeFilterWidget extends BaseSearchFilterWidget<DamageTypeFilter> {
-  DamageTypeFilterWidget(SearchController controller) : super(controller);
+class EnergyTypeFilterWidget extends BaseSearchFilterWidget<EnergyTypeFilter> {
+  EnergyTypeFilterWidget(SearchController controller) : super(controller);
 
   @override
-  _DamageTypeFilterWidgetState createState() => _DamageTypeFilterWidgetState();
+  _EnergyTypeFilterWidgetState createState() => _EnergyTypeFilterWidgetState();
 }
 
-class _DamageTypeFilterWidgetState extends BaseSearchFilterWidgetState<
-    DamageTypeFilterWidget, DamageTypeFilter, DestinyDamageTypeDefinition> {
-  Map<int, DestinyDamageTypeDefinition> _definitions;
+class _EnergyTypeFilterWidgetState extends BaseSearchFilterWidgetState<
+    EnergyTypeFilterWidget, EnergyTypeFilter, DestinyEnergyTypeDefinition> {
+  Map<int, DestinyEnergyTypeDefinition> _definitions;
 
   @override
-  Iterable<DestinyDamageTypeDefinition> get options {
+  Iterable<DestinyEnergyTypeDefinition> get options {
     if (_definitions == null) return List();
     var _options = filter.availableValues.map((h) => _definitions[h]).toList();
     _options.sort((a, b) => a?.index?.compareTo(b?.index ?? -1) ?? 0);
@@ -31,7 +31,7 @@ class _DamageTypeFilterWidgetState extends BaseSearchFilterWidgetState<
   @override
   onUpdate() async {
     _definitions = await ManifestService()
-        .getDefinitions<DestinyDamageTypeDefinition>(filter.availableValues);
+        .getDefinitions<DestinyEnergyTypeDefinition>(filter.availableValues);
     super.onUpdate();
   }
 
@@ -51,7 +51,7 @@ class _DamageTypeFilterWidgetState extends BaseSearchFilterWidgetState<
 
   @override
   Widget buildButtonLabel(
-      BuildContext context, DestinyDamageTypeDefinition value) {
+      BuildContext context, DestinyEnergyTypeDefinition value) {
     if (value?.displayProperties?.hasIcon == true) {
       return Container(
           margin: EdgeInsets.all(8),
@@ -68,25 +68,25 @@ class _DamageTypeFilterWidgetState extends BaseSearchFilterWidgetState<
   }
 
   @override
-  Color buttonBgColor(DestinyDamageTypeDefinition value) {
+  Color buttonBgColor(DestinyEnergyTypeDefinition value) {
     return super.buttonBgColor(value);
   }
 
   @override
-  valueToFilter(DestinyDamageTypeDefinition value) {
+  valueToFilter(DestinyEnergyTypeDefinition value) {
     return value?.hash;
   }
 
   @override
   Widget buildFilterLabel(BuildContext context) {
-    return TranslatedTextWidget("Damage Type", uppercase: true,);
+    return TranslatedTextWidget("Energy Type", uppercase: true,);
   }
 
   @override
   Widget buildDisabledLabel(BuildContext context) {
     try{
       var value = options.single;
-      if(value.enumValue == DamageType.None){
+      if(value.enumValue == DestinyEnergyType.Any){
         return Container();
       }
     }catch(_){

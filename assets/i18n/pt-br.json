@@ -264,5 +264,10 @@
     "Sort": "Ordenar",
     "Active Sorters": "Ordernadores Ativos",
     "Available Sorters": "Ordenadores Disponíveis",
-    "Select Stat": "Select Stat"
+    "Select Stat": "Selecione o Atributo",
+    "Current average": "Média atual",
+    "Achievable average": "Média alcançável",
+    "Under average slots": "Peças abaixo da média",
+    "Go for powerful reward?": "Pegar recompensa poderosa?",
+    "Go for pinnacle reward?": "Pegar recompensa alto-nível?"
 }
