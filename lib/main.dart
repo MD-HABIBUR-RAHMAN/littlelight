@@ -21,9 +21,10 @@ void main() async {
     main();
   });
 
-  runZoned<Future<void>>(() async {
+  // runZonedGuarded<Future<void>>(() async {
+  runZoned(() {
     runApp(new LittleLight(key: Key("little_light_$restartCounter")));
-  }, onError:(error, stackTrace) {
+  }, onError: (error, stackTrace) {
     handler.handleException(error, stackTrace);
   });
 }
@@ -54,12 +55,10 @@ class LittleLight extends StatelessWidget {
           toggleableActiveColor: Colors.lightBlueAccent.shade200,
           textTheme: TextTheme(
               body2: TextStyle(
-                color:Colors.grey.shade300,
-                fontWeight: FontWeight.w500
-              ),
+                  color: Colors.grey.shade300, fontWeight: FontWeight.w500),
               button: TextStyle(
-              fontWeight: FontWeight.bold,
-          )),
+                fontWeight: FontWeight.bold,
+              )),
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
@@ -112,6 +111,7 @@ class LittleLightScrollBehaviour extends ScrollBehavior {
       color: Theme.of(context).accentColor,
     );
   }
+
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
     if (Platform.isIOS) {
