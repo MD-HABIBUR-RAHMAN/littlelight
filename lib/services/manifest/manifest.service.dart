@@ -34,7 +34,8 @@ class ManifestService {
   }
 
   Future<String> get _localPath async {
-    final directory = await getApplicationDocumentsDirectory();
+    var directory = await getApplicationDocumentsDirectory();
+    directory = await getApplicationSupportDirectory();
     return directory.path;
   }
 
@@ -94,7 +95,14 @@ class ManifestService {
         onProgress(loaded, totalSize);
       }
     }
-    await sink.flush();
+    
+    print('pre flush');
+    try{
+      await sink.flush();
+    }catch(e){
+      print(e);
+    }
+    print('post flush');
     await sink.close();
 
     List<int> unzippedData = await compute(_extractFromZip, zipFile);
