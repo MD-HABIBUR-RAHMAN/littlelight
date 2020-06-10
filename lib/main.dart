@@ -21,10 +21,9 @@ void main() async {
     main();
   });
 
-  // runZonedGuarded<Future<void>>(() async {
-  runZoned(() {
+  runZonedGuarded<Future<void>>(() async {
     runApp(new LittleLight(key: Key("little_light_$restartCounter")));
-  }, onError: (error, stackTrace) {
+  }, (error, stackTrace) {
     handler.handleException(error, stackTrace);
   });
 }
@@ -53,12 +52,15 @@ class LittleLight extends StatelessWidget {
           textSelectionColor: Colors.blueGrey.shade400,
           textSelectionHandleColor: Colors.lightBlueAccent.shade200,
           toggleableActiveColor: Colors.lightBlueAccent.shade200,
+          fontFamily: Platform.isMacOS ? "NeueHaasDisplay" : null,
           textTheme: TextTheme(
-              body2: TextStyle(
-                  color: Colors.grey.shade300, fontWeight: FontWeight.w500),
+              bodyText1: TextStyle(
+                color:Colors.grey.shade300,
+                fontWeight: FontWeight.w500
+              ),
               button: TextStyle(
-                fontWeight: FontWeight.bold,
-              )),
+              fontWeight: FontWeight.bold,
+          )),
           pageTransitionsTheme: PageTransitionsTheme(builders: {
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
@@ -111,7 +113,6 @@ class LittleLightScrollBehaviour extends ScrollBehavior {
       color: Theme.of(context).accentColor,
     );
   }
-
   @override
   ScrollPhysics getScrollPhysics(BuildContext context) {
     if (Platform.isIOS) {
