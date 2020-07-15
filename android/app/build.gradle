@@ -30,6 +30,8 @@ if (keyAvailable) {
 
 apply plugin: 'com.android.application'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 28
@@ -75,4 +77,6 @@ flutter {
 
 dependencies {
     testImplementation 'junit:junit:4.12'
+    implementation 'com.google.firebase:firebase-analytics:17.2.2'
 }
+
