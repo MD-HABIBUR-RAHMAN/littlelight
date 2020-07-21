@@ -8,7 +8,7 @@ description: A new Flutter project.
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
 ### MUST HAVE 2 digits on last part
-version: 1.7.09+107009
+version: 1.7.10+107010
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
