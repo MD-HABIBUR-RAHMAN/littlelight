@@ -20,6 +20,7 @@ platform :ios do
   lane :release do
     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
     deliver(
+      skip_metadata:true,
       submit_for_review:true,
       force: true,
       automatic_release:true,
