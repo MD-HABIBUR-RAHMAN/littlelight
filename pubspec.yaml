@@ -8,7 +8,7 @@ description: A new Flutter project.
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
 ### MUST HAVE 2 digits on last part
-version: 1.7.12+107012
+version: 1.7.20+107020
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -90,9 +90,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family:  DestinyIcons
+    - family:  LittleLightIcons
       fonts:
-      - asset: fonts/DestinyIcons.ttf
+      - asset: fonts/LittleLightIcons.ttf
     # - family: NeueHaasDisplay
       # fonts:
       # - asset: fonts/NeueHaasDisplay-Thin.ttf
