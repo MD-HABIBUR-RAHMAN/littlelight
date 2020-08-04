@@ -31,7 +31,6 @@ platform :android do
       aab:'../build/app/outputs/bundle/release/app.aab',
       skip_upload_screenshots:true,
       skip_upload_images:true,
-      track:'beta'
     )
   end
 

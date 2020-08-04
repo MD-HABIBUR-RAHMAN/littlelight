@@ -27,6 +27,7 @@ platform :ios do
       skip_screenshots:true,
       reject_if_possible:true,
       submission_information:{
+        export_compliance_uses_encryption:false,
         export_compliance_encryption_updated:false,
         add_id_info_uses_idfa:false
       }
