@@ -42,7 +42,7 @@ class ProfileComponentGroups {
     DestinyComponentType.ItemInstances,
     DestinyComponentType.ItemStats,
     DestinyComponentType.ItemObjectives,
-    // DestinyComponentType.ItemTalentGrids,
+    DestinyComponentType.ItemTalentGrids,
     DestinyComponentType.ItemSockets,
     DestinyComponentType.ItemPlugStates,
     DestinyComponentType.ItemPlugObjectives,
@@ -226,9 +226,6 @@ class ProfileService {
     if (components.contains(DestinyComponentType.CharacterRenderData)) {
       _profile.characterRenderData = response.characterRenderData;
     }
-    if (components.contains(DestinyComponentType.CharacterActivities)) {
-      _profile.characterActivities = response.characterActivities;
-    }
     if (components.contains(DestinyComponentType.CharacterEquipment)) {
       _profile.characterEquipment = response.characterEquipment;
     }
@@ -297,7 +294,11 @@ class ProfileService {
   }
 
   DestinyItemTalentGridComponent getTalentGrid(String instanceId) {
-    return _profile.itemComponents.talentGrids.data[instanceId];
+    if (_profile?.itemComponents?.talentGrids?.data?.containsKey(instanceId) ??
+        false) {
+      return _profile.itemComponents.talentGrids.data[instanceId];
+    }
+    return null;
   }
 
   Map<String, DestinyItemSocketsComponent> getAllSockets() {
@@ -381,7 +382,8 @@ class ProfileService {
 
   Map<String, DestinyPresentationNodeComponent> getCharacterPresentationNodes(
       String characterId) {
-    return _profile?.characterPresentationNodes?.data[characterId].nodes;
+    if (_profile?.characterPresentationNodes?.data == null) return null;
+    return _profile?.characterPresentationNodes?.data[characterId]?.nodes;
   }
 
   List<DestinyCharacterComponent> getCharacters(

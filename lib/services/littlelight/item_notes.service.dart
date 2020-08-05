@@ -90,6 +90,7 @@ class ItemNotesService {
 
   ItemNotes getNotesForItem(int itemHash, String itemInstanceId,
       [bool orNew = false]) {
+    if (_notes == null) return null;
     if (_notes.containsKey("${itemHash}_$itemInstanceId")) {
       return _notes["${itemHash}_$itemInstanceId"];
     }
