@@ -25,7 +25,7 @@ platform :ios do
       automatic_release:true,
       skip_screenshots:true,
       reject_if_possible:true,
-      include_in_app_purchases:false,
+      precheck_include_in_app_purchases:false,
       submission_information:{
         export_compliance_uses_encryption:false,
         export_compliance_encryption_updated:false,
@@ -41,7 +41,7 @@ platform :ios do
       automatic_release:true,
       skip_screenshots:true,
       skip_binary_upload:true,
-      include_in_app_purchases:false,
+      precheck_include_in_app_purchases:false,
       submission_information:{
         export_compliance_uses_encryption:false,
         export_compliance_encryption_updated:false,
