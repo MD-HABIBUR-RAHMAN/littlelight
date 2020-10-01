@@ -53,7 +53,6 @@ class LittleLight extends StatelessWidget {
       navigatorObservers: [observer],
       theme: new ThemeData(
           disabledColor: Colors.lightBlue.shade900,
-          // platform: TargetPlatform.android,
           backgroundColor: Colors.blueGrey.shade900,
           primarySwatch: Colors.lightBlue,
           primaryColor: Colors.blueGrey,
