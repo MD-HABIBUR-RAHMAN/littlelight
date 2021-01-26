@@ -9,7 +9,7 @@ import firebase_analytics_fde
 import firebase_core
 import firebase_crashlytics
 import package_info_fde
-import path_provider_fde
+import path_provider_macos
 import screen_fde
 import shared_preferences_fde
 import sqflite_fde

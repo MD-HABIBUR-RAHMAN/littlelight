@@ -1,9 +1,12 @@
+import 'package:bungie_api/models/destiny_presentation_node_definition.dart';
 import 'package:flutter/material.dart';
 import 'package:little_light/screens/presentation_node.screen.dart';
 import 'package:little_light/screens/triumph_search.screen.dart';
 import 'package:little_light/services/profile/destiny_settings.service.dart';
 import 'package:little_light/services/profile/profile.service.dart';
 import 'package:little_light/utils/selected_page_persistence.dart';
+import 'package:little_light/widgets/common/header.wiget.dart';
+import 'package:little_light/widgets/common/manifest_text.widget.dart';
 import 'package:little_light/widgets/common/translated_text.widget.dart';
 import 'package:little_light/widgets/presentation_nodes/presentation_node_tabs.widget.dart';
 
@@ -23,23 +26,39 @@ class TriumphsScreenState extends PresentationNodeScreenState<TriumphsScreen> {
     SelectedPagePersistence.saveLatestScreen(SelectedPagePersistence.triumphs);
   }
 
+  loadDefinition() async {
+    definition = await widget.manifest
+        .getDefinition<DestinyPresentationNodeDefinition>(
+            widget.presentationNodeHash);
+    print(definition.displayProperties.name);
+    setState(() {});
+  }
+
   @override
   Widget buildBody(BuildContext context) {
     var settings = DestinySettingsService();
-    return PresentationNodeTabsWidget(
-      presentationNodeHashes: [
-        settings.triumphsRootNode,
-        settings.sealsRootNode,
-        511607103,
-        settings.medalsRootNode,
-        settings.loreRootNode,
-        3215903653,
-        1881970629
+    return Column(
+      children: [
+        HeaderWidget(
+          child: ManifestText<DestinyPresentationNodeDefinition>(
+              settings.triumphsRootNode),
+        )
       ],
-      depth: 0,
-      itemBuilder: this.itemBuilder,
-      tileBuilder: this.tileBuilder,
     );
+    // return PresentationNodeTabsWidget(
+    //   presentationNodeHashes: [
+    //     settings.triumphsRootNode,
+    //     settings.sealsRootNode,
+    //     511607103,
+    //     settings.medalsRootNode,
+    //     settings.loreRootNode,
+    //     3215903653,
+    //     1881970629
+    //   ],
+    //   depth: 0,
+    //   itemBuilder: this.itemBuilder,
+    //   tileBuilder: this.tileBuilder,
+    // );
   }
 
   @override
